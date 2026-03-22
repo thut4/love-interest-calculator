@@ -723,3 +723,76 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  .zodiac-compat-card {
+    padding: 16px;
+  }
+
+  .zodiac-result-card {
+    padding: 16px;
+  }
+
+  .zodiac-result-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .zodiac-emoji-pill {
+    min-width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 1.5rem;
+  }
+
+  .zodiac-compat-score {
+    font-size: 1.6rem;
+  }
+
+  .zodiac-compat-title {
+    font-size: 1.05rem;
+  }
+
+  .zodiac-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .zodiac-copy-grid {
+    gap: 12px;
+  }
+
+  .zodiac-person-card {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .zodiac-kicker {
+    font-size: 0.78rem;
+  }
+
+  .zodiac-date-range {
+    font-size: 0.8rem;
+  }
+
+  .zodiac-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .zodiac-compat-tags {
+    gap: 6px;
+  }
+
+  .zodiac-compat-tags span {
+    font-size: 0.7rem;
+    padding: 5px 8px;
+  }
+
+  .zodiac-compat-description {
+    font-size: 0.84rem;
+  }
+
+  .zodiac-list li {
+    font-size: 0.84rem;
+  }
+}

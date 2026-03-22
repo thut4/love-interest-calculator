@@ -55,7 +55,7 @@ function ZodiacPersonCard({ label, profile }) {
 
       <div className="zodiac-copy-grid">
         <div>
-          <h4 className="zodiac-section-title">General Behaviors</h4>
+          <h4 className="zodiac-section-title">General Behavior</h4>
           <ul className="zodiac-list">
             {profile.sign.behaviors.map((item) => (
               <li key={item}>{item}</li>
@@ -107,7 +107,7 @@ export default function ZodiacChecker({ onBack }) {
   return (
     <section className="zodiac-panel glass-card p-6 sm:p-8 animate-fade-in-up">
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <span className="zodiac-mini-tag">New Feature ✨</span>
+        <span className="zodiac-mini-tag">Zodiac Sign ✨</span>
         <button className="btn-secondary px-4 py-2 text-sm" onClick={onBack}>
           ← Back to Home
         </button>

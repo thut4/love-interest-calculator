@@ -118,6 +118,9 @@ export default function ResultView({ result, onReset }) {
 
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 pb-8 animate-fade-in-up" style={{ animationDelay: '360ms', animationFillMode: 'both' }}>
+                        <button className="btn-secondary" onClick={onReset}>
+                            Back to Home
+                        </button>
                         <button className="btn-primary" onClick={onReset}>
                             🔄 Try Again
                         </button>
