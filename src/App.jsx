@@ -18,12 +18,14 @@ import FormStep from './components/FormStep';
 import ResultView from './components/ResultView';
 import BackgroundParticles from './components/BackgroundParticles';
 import ZodiacChecker from './components/ZodiacChecker';
+import SajuProfileChecker from './components/SajuProfileChecker';
 
 // ─── App States ──────────────────────────────────────────────
 const VIEW_LANDING = 'landing';
 const VIEW_QUIZ = 'quiz';
 const VIEW_RESULT = 'result';
 const VIEW_ZODIAC = 'zodiac';
+const VIEW_SAJU = 'saju';
 
 export default function App() {
   // Current view: landing → quiz → result
@@ -49,6 +51,10 @@ export default function App() {
 
   const handleOpenZodiac = useCallback(() => {
     setView(VIEW_ZODIAC);
+  }, []);
+
+  const handleOpenSaju = useCallback(() => {
+    setView(VIEW_SAJU);
   }, []);
 
   // Check if all questions in the current step are answered
@@ -84,8 +90,15 @@ export default function App() {
 
   const subtitle = useMemo(() => {
     if (view === VIEW_ZODIAC) return 'Find zodiac compatibility from two exact dates of birth.';
+    if (view === VIEW_SAJU) return 'Calculate your Saju pillars and Five Elements destiny energy.';
     if (view !== VIEW_LANDING) return 'Decode the signals. Know where you stand.';
     return '';
+  }, [view]);
+
+  const containerClass = useMemo(() => {
+    if (view === VIEW_SAJU) return 'w-full max-w-5xl';
+    if (view === VIEW_ZODIAC) return 'w-full max-w-4xl';
+    return 'w-full max-w-xl';
   }, [view]);
 
   // ─── Render ────────────────────────────────────────────────
@@ -115,7 +128,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex items-start justify-center px-4 pb-12">
-        <div className="w-full max-w-xl">
+        <div className={containerClass}>
 
           {/* ── LANDING ─────────────────────────────────── */}
           {view === VIEW_LANDING && (
@@ -138,15 +151,19 @@ export default function App() {
                 <button className="btn-secondary text-lg px-10 py-4" onClick={handleOpenZodiac}>
                   Zodiac Vibes 🌙
                 </button>
+                <button className="btn-secondary text-lg px-10 py-4" onClick={handleOpenSaju}>
+                  Saju Energy 🔮
+                </button>
               </div>
 
               {/* Feature highlights */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-14 max-w-2xl mx-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-14 max-w-4xl mx-auto">
                 {[
                   { icon: '📊', label: 'Interest Score' },
                   { icon: '🚩', label: 'Red Flags' },
                   { icon: '💡', label: 'Next Move' },
                   { icon: '♈', label: 'Zodiac Traits' },
+                  { icon: '오행', label: 'Saju Energy' },
                 ].map((f) => (
                   <div key={f.label} className="glass-card-light p-4 text-center">
                     <span className="text-2xl block mb-1">{f.icon}</span>
@@ -209,6 +226,13 @@ export default function App() {
           {view === VIEW_ZODIAC && (
             <div className="mt-4">
               <ZodiacChecker onBack={handleReset} />
+            </div>
+          )}
+
+          {/* ── SAJU ────────────────────────────────────── */}
+          {view === VIEW_SAJU && (
+            <div className="mt-4">
+              <SajuProfileChecker onBack={handleReset} />
             </div>
           )}
         </div>
