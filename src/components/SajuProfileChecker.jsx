@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ELEMENT_META, ELEMENT_ORDER } from '../data/sajuData';
 import { calculateSajuProfile } from '../engine/sajuEngine';
+import { buildLocalizedSajuResult, SAJU_RESULT_UI_TEXT } from '../data/sajuI18n';
 
 const ERROR_MESSAGES = {
   invalid_birth_input: 'Please provide a valid birth date and exact birth time.',
@@ -16,6 +17,7 @@ const INITIAL_FORM = {
 };
 
 const SAJU_FORM_STORAGE_KEY = 'saju-form-v1';
+const SAJU_RESULT_LANGUAGE_KEY = 'saju-result-language-v1';
 
 function loadSavedForm() {
   if (typeof window === 'undefined') return INITIAL_FORM;
@@ -40,6 +42,12 @@ export default function SajuProfileChecker({ onBack }) {
   const [form, setForm] = useState(loadSavedForm);
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState('');
+  const [resultLanguage, setResultLanguage] = useState(() => {
+    if (typeof window === 'undefined') return 'en';
+
+    const saved = window.localStorage.getItem(SAJU_RESULT_LANGUAGE_KEY);
+    return saved === 'my' ? 'my' : 'en';
+  });
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -73,6 +81,16 @@ export default function SajuProfileChecker({ onBack }) {
     if (typeof window === 'undefined') return;
     window.localStorage.setItem(SAJU_FORM_STORAGE_KEY, JSON.stringify(form));
   }, [form]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(SAJU_RESULT_LANGUAGE_KEY, resultLanguage);
+  }, [resultLanguage]);
+
+  const localizedResult = useMemo(() => {
+    if (!profile) return null;
+    return buildLocalizedSajuResult(profile, resultLanguage);
+  }, [profile, resultLanguage]);
 
   const handleStartNew = () => {
     setForm(INITIAL_FORM);
@@ -177,26 +195,47 @@ export default function SajuProfileChecker({ onBack }) {
 
       {profile && (
         <div className="mt-8 space-y-6">
+          <div className="saju-lang-bar animate-fade-in-scale">
+            <span>{SAJU_RESULT_UI_TEXT[resultLanguage].languageLabel}</span>
+            <div className="saju-lang-tabs" role="tablist" aria-label="Saju result language">
+              {[
+                { id: 'en', label: SAJU_RESULT_UI_TEXT[resultLanguage].englishTab },
+                { id: 'my', label: SAJU_RESULT_UI_TEXT[resultLanguage].myanmarTab },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={resultLanguage === item.id}
+                  className={`saju-lang-tab ${resultLanguage === item.id ? 'is-active' : ''}`}
+                  onClick={() => setResultLanguage(item.id)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <article className="saju-result-card animate-fade-in-scale">
-            <h3 className="saju-section-title">Four Pillars (사주팔자)</h3>
+            <h3 className="saju-section-title">{localizedResult.ui.fourPillarsTitle}</h3>
             <div className="saju-pillars-grid">
-              {profile.pillars.map((pillar) => (
-                <div key={pillar.label} className="saju-pillar-card">
-                  <p className="saju-pillar-label">{pillar.label}</p>
+              {localizedResult.pillars.map((pillar) => (
+                <div key={`${pillar.label}-${pillar.hanja}`} className="saju-pillar-card">
+                  <p className="saju-pillar-label">{pillar.displayLabel}</p>
                   <p className="saju-pillar-hanja">{pillar.hanja}</p>
                   <p className="saju-pillar-korean">{pillar.korean}</p>
-                  <p className="saju-pillar-meta">{pillar.animal} · {pillar.stem.element}/{pillar.branch.element}</p>
+                  <p className="saju-pillar-meta">{pillar.displayAnimal} · {pillar.displayElementPair}</p>
                 </div>
               ))}
             </div>
 
             <div className="saju-location-meta">
-              {profile.birthLocation.city}, {profile.birthLocation.country} · {profile.timezone}
+              {localizedResult.locationLine}
             </div>
           </article>
 
           <article className="saju-result-card animate-fade-in-scale">
-            <h3 className="saju-section-title">Five Elements Balance (오행)</h3>
+            <h3 className="saju-section-title">{localizedResult.ui.fiveElementsTitle}</h3>
             <div className="saju-elements-list">
               {ELEMENT_ORDER.map((element) => {
                 const value = profile.elementCounts[element];
@@ -224,71 +263,71 @@ export default function SajuProfileChecker({ onBack }) {
 
             <div className="saju-tags-wrap">
               <span className="saju-tag saju-tag-strong">
-                Dominant: {ELEMENT_META[profile.dominantElement].korean}
+                {localizedResult.dominantTag}
               </span>
               <span className="saju-tag saju-tag-weak">
-                Balance Focus: {profile.weakElements.map((item) => ELEMENT_META[item].korean).join(', ')}
+                {localizedResult.balanceTag}
               </span>
             </div>
           </article>
 
           <article className="saju-result-card animate-fade-in-scale">
-            <h3 className="saju-section-title">Destiny Energy Interpretation</h3>
-            <p className="saju-energy-summary">{profile.energySummary}</p>
-            <p className="saju-destiny-copy">{profile.destinyInterpretation}</p>
+            <h3 className="saju-section-title">{localizedResult.ui.destinyTitle}</h3>
+            <p className="saju-energy-summary">{localizedResult.energySummary}</p>
+            <p className="saju-destiny-copy">{localizedResult.destinyInterpretation}</p>
 
-            <h4 className="saju-advice-title">Personalized Saju Advice</h4>
+            <h4 className="saju-advice-title">{localizedResult.ui.personalizedAdviceTitle}</h4>
             <ul className="saju-advice-list">
-              {profile.personalizedAdvice.map((tip) => (
-                <li key={tip}>{tip}</li>
+              {localizedResult.personalizedAdvice.map((tip, index) => (
+                <li key={`${index}-${tip.slice(0, 24)}`}>{tip}</li>
               ))}
             </ul>
 
             <div className="saju-note-wrap">
-              {profile.notes.map((note) => (
-                <p key={note}>{note}</p>
+              {localizedResult.notes.map((note, index) => (
+                <p key={`${index}-${note.slice(0, 20)}`}>{note}</p>
               ))}
             </div>
           </article>
 
           <article className="saju-result-card animate-fade-in-scale">
-            <h3 className="saju-section-title">English Deep Dive (Detailed)</h3>
-            <p className="saju-deep-overview">{profile.englishOverview}</p>
+            <h3 className="saju-section-title">{localizedResult.ui.deepDiveTitle}</h3>
+            <p className="saju-deep-overview">{localizedResult.deepOverview}</p>
 
-            <h4 className="saju-advice-title">Pillar-by-Pillar Insight</h4>
+            <h4 className="saju-advice-title">{localizedResult.ui.pillarInsightTitle}</h4>
             <div className="saju-deep-grid">
-              {profile.pillarDeepDive.map((item) => (
-                <div key={item.label} className="saju-deep-card">
+              {localizedResult.pillarDeepDive.map((item, index) => (
+                <div key={`${index}-${item.label}`} className="saju-deep-card">
                   <p className="saju-deep-label">{item.label}</p>
                   <h5>{item.title}</h5>
-                  <p className="saju-deep-blend">{item.hanja} · {item.korean} · {item.englishBlend}</p>
+                  <p className="saju-deep-blend">{item.blend}</p>
                   <p>{item.summary}</p>
                   <ul>
                     {item.strengths.map((point) => (
                       <li key={point}>{point}</li>
                     ))}
                   </ul>
-                  <p className="saju-deep-tip">Growth focus: {item.growthTip}</p>
+                  <p className="saju-deep-tip">{localizedResult.ui.growthFocusLabel}: {item.growthTip}</p>
                 </div>
               ))}
             </div>
 
-            <h4 className="saju-advice-title">Element-by-Element Reading</h4>
+            <h4 className="saju-advice-title">{localizedResult.ui.elementInsightTitle}</h4>
             <div className="saju-element-deep-grid">
-              {profile.elementDeepDive.map((item) => (
+              {localizedResult.elementDeepDive.map((item) => (
                 <div key={item.element} className="saju-element-deep-card">
                   <div className="saju-element-deep-head">
                     <strong>{item.korean}</strong>
-                    <span>Score {item.score} · {item.status}</span>
+                    <span>{localizedResult.ui.scoreLabel} {item.score} · {item.status}</span>
                   </div>
                   <p className="saju-element-deep-title">{item.title}</p>
                   <p>{item.summary}</p>
-                  <p><span>Strength:</span> {item.strengths}</p>
-                  <p><span>When low:</span> {item.lowState}</p>
-                  <p><span>Habits:</span> {item.habitFocus}</p>
-                  <p><span>Relationship:</span> {item.relationshipTip}</p>
-                  <p><span>Career:</span> {item.careerTip}</p>
-                  <p><span>Balance action:</span> {item.balanceAction}</p>
+                  <p><span>{localizedResult.ui.strengthLabel}:</span> {item.strengths}</p>
+                  <p><span>{localizedResult.ui.whenLowLabel}:</span> {item.lowState}</p>
+                  <p><span>{localizedResult.ui.habitsLabel}:</span> {item.habitFocus}</p>
+                  <p><span>{localizedResult.ui.relationshipLabel}:</span> {item.relationshipTip}</p>
+                  <p><span>{localizedResult.ui.careerLabel}:</span> {item.careerTip}</p>
+                  <p><span>{localizedResult.ui.balanceActionLabel}:</span> {item.balanceAction}</p>
                 </div>
               ))}
             </div>

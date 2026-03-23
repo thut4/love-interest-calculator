@@ -791,6 +791,45 @@ body {
   padding: 9px 12px;
 }
 
+.saju-lang-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.saju-lang-bar span {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #d9e3ff;
+}
+
+.saju-lang-tabs {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 3px;
+  border: 1px solid rgba(186, 200, 255, 0.26);
+  background: rgba(14, 24, 58, 0.62);
+}
+
+.saju-lang-tab {
+  border: none;
+  background: transparent;
+  color: #cad5f6;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saju-lang-tab.is-active {
+  background: linear-gradient(135deg, #7e6bff, #f06595);
+  color: #fff;
+}
+
 .saju-result-card {
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.15);
