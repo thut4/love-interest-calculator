@@ -11,14 +11,19 @@ class SajuProfileController extends StateNotifier<SajuProfileState> {
   final CalculateSajuProfile _calculateSajuProfile;
 
   void setBirthDate(DateTime date) {
+    final normalized = _dateOnly(date);
+    if (state.birthDate == normalized) return;
+
     state = state.copyWith(
-      birthDate: _dateOnly(date),
+      birthDate: normalized,
       clearProfile: true,
       clearError: true,
     );
   }
 
   void setBirthTime(TimeOfDay time) {
+    if (state.birthTime == time) return;
+
     state = state.copyWith(
       birthTime: time,
       clearProfile: true,
@@ -27,6 +32,8 @@ class SajuProfileController extends StateNotifier<SajuProfileState> {
   }
 
   void setBirthCity(String city) {
+    if (state.birthCity == city) return;
+
     state = state.copyWith(
       birthCity: city,
       clearProfile: true,
@@ -35,6 +42,8 @@ class SajuProfileController extends StateNotifier<SajuProfileState> {
   }
 
   void setBirthCountry(String country) {
+    if (state.birthCountry == country) return;
+
     state = state.copyWith(
       birthCountry: country,
       clearProfile: true,
@@ -77,6 +86,10 @@ class SajuProfileController extends StateNotifier<SajuProfileState> {
     );
 
     state = state.copyWith(profile: profile, clearError: true);
+  }
+
+  void reset() {
+    state = const SajuProfileState();
   }
 
   DateTime _dateOnly(DateTime value) {

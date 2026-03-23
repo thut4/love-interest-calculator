@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ELEMENT_META, ELEMENT_ORDER } from '../data/sajuData';
 import { calculateSajuProfile } from '../engine/sajuEngine';
 
@@ -15,8 +15,29 @@ const INITIAL_FORM = {
   birthCountry: '',
 };
 
+const SAJU_FORM_STORAGE_KEY = 'saju-form-v1';
+
+function loadSavedForm() {
+  if (typeof window === 'undefined') return INITIAL_FORM;
+
+  try {
+    const raw = window.localStorage.getItem(SAJU_FORM_STORAGE_KEY);
+    if (!raw) return INITIAL_FORM;
+
+    const parsed = JSON.parse(raw);
+    return {
+      birthDate: typeof parsed.birthDate === 'string' ? parsed.birthDate : '',
+      birthTime: typeof parsed.birthTime === 'string' ? parsed.birthTime : '',
+      birthCity: typeof parsed.birthCity === 'string' ? parsed.birthCity : '',
+      birthCountry: typeof parsed.birthCountry === 'string' ? parsed.birthCountry : '',
+    };
+  } catch {
+    return INITIAL_FORM;
+  }
+}
+
 export default function SajuProfileChecker({ onBack }) {
-  const [form, setForm] = useState(INITIAL_FORM);
+  const [form, setForm] = useState(loadSavedForm);
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState('');
 
@@ -43,6 +64,24 @@ export default function SajuProfileChecker({ onBack }) {
     if (!profile) return 1;
     return Math.max(...Object.values(profile.elementCounts), 1);
   }, [profile]);
+
+  const hasAnyInput = useMemo(() => {
+    return Object.values(form).some((value) => value.trim().length > 0) || Boolean(profile);
+  }, [form, profile]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(SAJU_FORM_STORAGE_KEY, JSON.stringify(form));
+  }, [form]);
+
+  const handleStartNew = () => {
+    setForm(INITIAL_FORM);
+    setProfile(null);
+    setError('');
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(SAJU_FORM_STORAGE_KEY);
+    }
+  };
 
   return (
     <section className="saju-panel glass-card p-6 sm:p-8 animate-fade-in-up">
@@ -114,9 +153,20 @@ export default function SajuProfileChecker({ onBack }) {
           </label>
         </div>
 
-        <button type="submit" className="btn-primary">
-          Calculate My Saju 🔮
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button type="submit" className="btn-primary">
+            Calculate My Saju 🔮
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={handleStartNew}
+            disabled={!hasAnyInput}
+            style={{ opacity: hasAnyInput ? 1 : 0.45 }}
+          >
+            Start New Reading
+          </button>
+        </div>
 
         {error && (
           <p className="saju-error" role="alert">

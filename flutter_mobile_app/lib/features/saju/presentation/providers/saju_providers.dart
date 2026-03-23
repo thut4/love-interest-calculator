@@ -15,9 +15,7 @@ final calculateSajuProfileProvider = Provider<CalculateSajuProfile>((ref) {
 });
 
 final sajuProfileControllerProvider =
-    StateNotifierProvider.autoDispose<SajuProfileController, SajuProfileState>((
-      ref,
-    ) {
+    StateNotifierProvider<SajuProfileController, SajuProfileState>((ref) {
       final useCase = ref.watch(calculateSajuProfileProvider);
       return SajuProfileController(useCase);
     });

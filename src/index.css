@@ -905,7 +905,7 @@ body {
 
 .saju-energy-summary {
   margin: 0;
-  font-size: 0.93rem;
+  font-size: 1.02rem;
   color: #f7f9ff;
   font-weight: 700;
 }
@@ -913,8 +913,8 @@ body {
 .saju-destiny-copy {
   margin: 8px 0 0;
   color: #c8d2f1;
-  line-height: 1.55;
-  font-size: 0.9rem;
+  line-height: 1.62;
+  font-size: 1rem;
 }
 
 .saju-advice-title {
@@ -933,8 +933,8 @@ body {
 
 .saju-advice-list li {
   color: #cad3f2;
-  line-height: 1.5;
-  font-size: 0.88rem;
+  line-height: 1.58;
+  font-size: 0.97rem;
 }
 
 .saju-note-wrap {
@@ -948,8 +948,8 @@ body {
 .saju-note-wrap p {
   margin: 0;
   color: #ccd5f2;
-  font-size: 0.76rem;
-  line-height: 1.45;
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 .saju-note-wrap p+p {
@@ -959,8 +959,8 @@ body {
 .saju-deep-overview {
   margin: 0;
   color: #eef3ff;
-  font-size: 0.92rem;
-  line-height: 1.55;
+  font-size: 1rem;
+  line-height: 1.62;
 }
 
 .saju-deep-grid {
@@ -997,8 +997,8 @@ body {
 .saju-deep-card p {
   margin: 8px 0 0;
   color: #ced7f3;
-  font-size: 0.84rem;
-  line-height: 1.45;
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .saju-deep-card ul {
@@ -1007,8 +1007,8 @@ body {
   color: #d7dff8;
   display: grid;
   gap: 6px;
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .saju-deep-tip {
@@ -1053,8 +1053,8 @@ body {
 .saju-element-deep-card p {
   margin: 7px 0 0;
   color: #ced7f3;
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .saju-element-deep-card p span {

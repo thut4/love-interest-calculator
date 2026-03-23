@@ -24,14 +24,45 @@ const Map<String, Color> _elementColors = {
   'Water': Color(0xFF70D6FF),
 };
 
-class SajuProfileScreen extends ConsumerWidget {
+class SajuProfileScreen extends ConsumerStatefulWidget {
   const SajuProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SajuProfileScreen> createState() => _SajuProfileScreenState();
+}
+
+class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
+  late final TextEditingController _cityController;
+  late final TextEditingController _countryController;
+
+  @override
+  void initState() {
+    super.initState();
+    _cityController = TextEditingController();
+    _countryController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _cityController.dispose();
+    _countryController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(sajuProfileControllerProvider);
     final controller = ref.read(sajuProfileControllerProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
+    final hasAnyInput =
+        state.birthDate != null ||
+        state.birthTime != null ||
+        state.birthCity.trim().isNotEmpty ||
+        state.birthCountry.trim().isNotEmpty ||
+        state.profile != null;
+
+    _syncTextController(_cityController, state.birthCity);
+    _syncTextController(_countryController, state.birthCountry);
 
     return Scaffold(
       appBar: AppBar(
@@ -100,6 +131,7 @@ class SajuProfileScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 12),
                       TextField(
+                        controller: _cityController,
                         onChanged: controller.setBirthCity,
                         textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
@@ -109,6 +141,7 @@ class SajuProfileScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: _countryController,
                         onChanged: controller.setBirthCountry,
                         textInputAction: TextInputAction.done,
                         decoration: const InputDecoration(
@@ -117,11 +150,29 @@ class SajuProfileScreen extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 14),
-                      ElevatedButton(
-                        onPressed: state.canCalculate
-                            ? controller.calculate
-                            : null,
-                        child: const Text('Calculate My Saju ✨'),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: state.canCalculate
+                                  ? controller.calculate
+                                  : null,
+                              child: const Text('Calculate My Saju ✨'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: hasAnyInput
+                                  ? () {
+                                      FocusScope.of(context).unfocus();
+                                      controller.reset();
+                                    }
+                                  : null,
+                              child: const Text('Start New Reading'),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -159,6 +210,14 @@ class SajuProfileScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _syncTextController(TextEditingController controller, String value) {
+    if (controller.text == value) return;
+    controller.value = TextEditingValue(
+      text: value,
+      selection: TextSelection.collapsed(offset: value.length),
     );
   }
 
@@ -407,7 +466,11 @@ class _InterpretationCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             profile.destinyInterpretation,
-            style: textTheme.bodyMedium?.copyWith(color: Colors.white70),
+            style: textTheme.bodyMedium?.copyWith(
+              color: Colors.white70,
+              fontSize: 15.2,
+              height: 1.45,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -415,6 +478,8 @@ class _InterpretationCard extends StatelessWidget {
             style: textTheme.bodyMedium?.copyWith(
               color: const Color(0xFFE8EEFF),
               fontWeight: FontWeight.w600,
+              fontSize: 15.4,
+              height: 1.45,
             ),
           ),
           const SizedBox(height: 12),
@@ -436,6 +501,8 @@ class _InterpretationCard extends StatelessWidget {
                       tip,
                       style: textTheme.bodyMedium?.copyWith(
                         color: Colors.white70,
+                        fontSize: 15,
+                        height: 1.4,
                       ),
                     ),
                   ),
@@ -488,7 +555,10 @@ class _DeepDiveCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             'Pillar-by-pillar and element-by-element reading in English.',
-            style: textTheme.bodyMedium?.copyWith(color: Colors.white70),
+            style: textTheme.bodyMedium?.copyWith(
+              color: Colors.white70,
+              fontSize: 15,
+            ),
           ),
           const SizedBox(height: 12),
           Text('Pillar-by-Pillar Insight', style: textTheme.titleMedium),
@@ -522,6 +592,8 @@ class _DeepDiveCard extends StatelessWidget {
                     insight.summary,
                     style: textTheme.bodyMedium?.copyWith(
                       color: Colors.white70,
+                      fontSize: 15,
+                      height: 1.42,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -532,6 +604,8 @@ class _DeepDiveCard extends StatelessWidget {
                         '• $line',
                         style: textTheme.bodySmall?.copyWith(
                           color: const Color(0xFFE5ECFF),
+                          fontSize: 14,
+                          height: 1.4,
                         ),
                       ),
                     );
@@ -542,6 +616,8 @@ class _DeepDiveCard extends StatelessWidget {
                     style: textTheme.bodySmall?.copyWith(
                       color: const Color(0xFFF1F5FF),
                       fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      height: 1.4,
                     ),
                   ),
                 ],
@@ -613,7 +689,11 @@ class _DeepDiveCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 5),
       child: RichText(
         text: TextSpan(
-          style: textTheme.bodySmall?.copyWith(color: Colors.white70),
+          style: textTheme.bodySmall?.copyWith(
+            color: Colors.white70,
+            fontSize: 14,
+            height: 1.4,
+          ),
           children: [
             TextSpan(
               text: '$label: ',
