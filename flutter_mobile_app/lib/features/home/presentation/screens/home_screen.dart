@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/cosmic_background.dart';
 import '../../../../core/widgets/glass_panel.dart';
 import '../../../love_interest/presentation/screens/love_quiz_screen.dart';
+import '../../../palm_reading/presentation/screens/palm_reading_screen.dart';
 import '../../../zodiac/presentation/screens/zodiac_compatibility_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -56,6 +57,21 @@ class HomeScreen extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const ZodiacCompatibilityScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      _FeatureCard(
+                        emoji: '🖐️',
+                        title: 'Palm Reading',
+                        description:
+                            'Upload a clear palm photo and receive a warm, mystical reading powered by Gemini.',
+                        accent: const Color(0xFF8B7CFF),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const PalmReadingScreen(),
                             ),
                           );
                         },
