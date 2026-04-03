@@ -19,6 +19,12 @@ Playful mobile companion app for this project, built with:
 - Compatibility score, level, chemistry/challenge insights
 - Sign-level behaviors and habits
 
+3. Saju Five Elements Profile
+- Full birth date + exact birth time + birth city/country inputs
+- Four Pillars (사주팔자) calculation
+- Korean Five Elements (오행) balance with dominant/weak energy
+- Destiny energy interpretation and personalized advice
+
 ## Architecture
 
 `lib/` is organized by feature and layers:
@@ -35,6 +41,10 @@ Playful mobile companion app for this project, built with:
   - `domain`: entities, repository contract, use case
   - `data`: sign data + compatibility logic
   - `presentation`: Riverpod providers, state/controller, compatibility screen
+- `features/saju/`
+  - `domain`: Saju entities, repository contract, use case
+  - `data`: stem/branch cycles, pillar calculation, elements/advice logic
+  - `presentation`: Riverpod providers, state/controller, Saju profile screen
 
 ## Run
 

@@ -10,5 +10,6 @@ void main() {
 
     expect(find.text('Love Interest Analyzer'), findsOneWidget);
     expect(find.text('Zodiac Compatibility'), findsOneWidget);
+    expect(find.text('Saju Five Elements'), findsOneWidget);
   });
 }
