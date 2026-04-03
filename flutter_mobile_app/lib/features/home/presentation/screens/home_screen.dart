@@ -4,6 +4,8 @@ import '../../../../core/widgets/cosmic_background.dart';
 import '../../../../core/widgets/glass_panel.dart';
 import '../../../love_interest/presentation/screens/love_quiz_screen.dart';
 import '../../../saju/presentation/screens/saju_profile_screen.dart';
+import '../../../palm_reading/presentation/screens/palm_reading_screen.dart';
+import '../../../tarot/presentation/screens/tarot_reading_screen.dart';
 import '../../../zodiac/presentation/screens/zodiac_compatibility_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -24,7 +26,7 @@ class HomeScreen extends StatelessWidget {
                 Text('Love & Zodiac Studio', style: textTheme.headlineMedium),
                 const SizedBox(height: 10),
                 Text(
-                  'Playful insights for romance signals and zodiac compatibility.',
+                  'Playful insights for romance, symbolism, and cosmic compatibility.',
                   style: textTheme.bodyMedium?.copyWith(color: Colors.white70),
                 ),
                 const SizedBox(height: 24),
@@ -33,7 +35,7 @@ class HomeScreen extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     children: [
                       _FeatureCard(
-                        emoji: '💘',
+                        emoji: 'Love',
                         title: 'Love Interest Analyzer',
                         description:
                             'Answer quick behavior-based questions and get a score, red flags, and next move advice.',
@@ -48,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       _FeatureCard(
-                        emoji: '🌙',
+                        emoji: 'Zodiac',
                         title: 'Zodiac Compatibility',
                         description:
                             'Enter two exact dates of birth to reveal both signs and a modern compatibility summary.',
@@ -72,6 +74,30 @@ class HomeScreen extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const SajuProfileScreen(),
+                        emoji: 'Palm',
+                        title: 'Palm Reading',
+                        description:
+                            'Upload a clear palm photo and receive a warm, mystical reading powered by Gemini.',
+                        accent: const Color(0xFF8B7CFF),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const PalmReadingScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      _FeatureCard(
+                        emoji: 'Tarot',
+                        title: 'Tarot Reading',
+                        description:
+                            'Draw six Major Arcana cards from the online deck and reveal a full Gemini reading.',
+                        accent: const Color(0xFFFFC56E),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const TarotReadingScreen(),
                             ),
                           );
                         },
@@ -81,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('✨', style: TextStyle(fontSize: 22)),
+                            const Text('*', style: TextStyle(fontSize: 22)),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
@@ -136,7 +162,23 @@ class _FeatureCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(emoji, style: const TextStyle(fontSize: 26)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(999),
+                      color: accent.withValues(alpha: 0.16),
+                    ),
+                    child: Text(
+                      emoji,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(child: Text(title, style: textTheme.titleLarge)),
                   Icon(Icons.arrow_forward_rounded, color: accent),

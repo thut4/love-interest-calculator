@@ -129,6 +129,7 @@ export default function App() {
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex items-start justify-center px-4 pb-12">
         <div className={containerClass}>
+        <div className={`w-full ${view === VIEW_ZODIAC ? 'max-w-5xl' : 'max-w-xl'}`}>
 
           {/* ── LANDING ─────────────────────────────────── */}
           {view === VIEW_LANDING && (
@@ -179,6 +180,11 @@ export default function App() {
           {/* ── QUIZ ────────────────────────────────────── */}
           {view === VIEW_QUIZ && (
             <div className="mt-4">
+              <div className="flex justify-between items-center mb-4">
+                <button className="btn-secondary px-4 py-2 text-sm" onClick={handleReset}>
+                  ← Back to Home
+                </button>
+              </div>
               <ProgressBar
                 currentStep={currentStep}
                 totalSteps={STEPS.length}
