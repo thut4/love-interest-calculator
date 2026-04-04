@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/cosmic_background.dart';
 import '../../../../core/widgets/glass_panel.dart';
 import '../../../love_interest/presentation/screens/love_quiz_screen.dart';
+import '../../../mahar_bote/presentation/screens/mahar_bote_screen.dart';
 import '../../../palm_reading/presentation/screens/palm_reading_screen.dart';
 import '../../../saju/presentation/screens/saju_profile_screen.dart';
 import '../../../tarot/presentation/screens/tarot_reading_screen.dart';
@@ -74,6 +75,21 @@ class HomeScreen extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const SajuProfileScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      _FeatureCard(
+                        emoji: 'Mahar',
+                        title: 'Mahar Bote',
+                        description:
+                            'Pick your birth date to reveal your Myanmar Baydin house with a playful cosmic snapshot.',
+                        accent: const Color(0xFF4DEEAA),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const MaharBoteScreen(),
                             ),
                           );
                         },

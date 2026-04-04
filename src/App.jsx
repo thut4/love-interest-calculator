@@ -8,12 +8,14 @@ import ResultView from './components/ResultView';
 import BackgroundParticles from './components/BackgroundParticles';
 import ZodiacChecker from './components/ZodiacChecker';
 import SajuProfileChecker from './components/SajuProfileChecker';
+import MaharBoteChecker from './components/MaharBoteChecker';
 
 const VIEW_LANDING = 'landing';
 const VIEW_QUIZ = 'quiz';
 const VIEW_RESULT = 'result';
 const VIEW_ZODIAC = 'zodiac';
 const VIEW_SAJU = 'saju';
+const VIEW_MAHAR_BOTE = 'mahar_bote';
 
 export default function App() {
   const [view, setView] = useState(VIEW_LANDING);
@@ -38,6 +40,10 @@ export default function App() {
 
   const handleOpenSaju = useCallback(() => {
     setView(VIEW_SAJU);
+  }, []);
+
+  const handleOpenMaharBote = useCallback(() => {
+    setView(VIEW_MAHAR_BOTE);
   }, []);
 
   const isStepComplete = useMemo(() => {
@@ -73,13 +79,14 @@ export default function App() {
   const subtitle = useMemo(() => {
     if (view === VIEW_ZODIAC) return 'Find zodiac compatibility from two exact dates of birth.';
     if (view === VIEW_SAJU) return 'Calculate your Saju pillars and Five Elements destiny energy.';
+    if (view === VIEW_MAHAR_BOTE) return 'Reveal your Myanmar Baydin house with a playful cosmic snapshot.';
     if (view !== VIEW_LANDING) return 'Decode the signals. Know where you stand.';
     return '';
   }, [view]);
 
   const containerClass = useMemo(() => {
     if (view === VIEW_SAJU) return 'w-full max-w-5xl';
-    if (view === VIEW_ZODIAC) return 'w-full max-w-4xl';
+    if (view === VIEW_ZODIAC || view === VIEW_MAHAR_BOTE) return 'w-full max-w-4xl';
     return 'w-full max-w-xl';
   }, [view]);
 
@@ -150,15 +157,25 @@ export default function App() {
                     patterns, and the deeper timing around your connection.
                   </p>
                 </div>
+
+                <div className="glass-card-light p-4 sm:p-5 text-left">
+                  <button className="btn-secondary text-lg px-6 py-4 w-full border-[#4DEEAA]/20 hover:border-[#4DEEAA]/50 focus:ring-[#4DEEAA]/50" style={{ color: '#4DEEAA' }} onClick={handleOpenMaharBote}>
+                    Mahar Bote
+                  </button>
+                  <p className="text-sm mt-4 leading-6" style={{ color: '#8b95b3' }}>
+                    Pick your birth date to reveal your Myanmar Baydin house, find your cosmic vibe, and discover dynamic planetary influences.
+                  </p>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-14 max-w-4xl mx-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-6 gap-4 mt-14 max-w-5xl mx-auto">
                 {[
                   { icon: 'Score', label: 'Interest Score' },
                   { icon: 'Flags', label: 'Red Flags' },
                   { icon: 'Hints', label: 'Next Move' },
                   { icon: 'Star', label: 'Zodiac Traits' },
                   { icon: 'Saju', label: 'Saju Energy' },
+                  { icon: 'Mahar', label: 'Mahar Bote' },
                 ].map((f) => (
                   <div key={f.label} className="glass-card-light p-4 text-center">
                     <span className="text-2xl block mb-1">{f.icon}</span>
@@ -224,6 +241,12 @@ export default function App() {
           {view === VIEW_SAJU && (
             <div className="mt-4">
               <SajuProfileChecker onBack={handleReset} />
+            </div>
+          )}
+
+          {view === VIEW_MAHAR_BOTE && (
+            <div className="mt-4">
+              <MaharBoteChecker onBack={handleReset} />
             </div>
           )}
         </div>
